@@ -1,0 +1,117 @@
+<?php
+
+/** StMarksColors and related classes */
+
+namespace smtech\stmarks_colors;
+
+/**
+ * A class to describe St. Mark's colors consistently
+ *
+ * @author Seth Battis <SethBattis@stmarksschool.org>
+ **/
+class StMarksColors {
+	
+	const STMARKS_BLUE = 'stmarks-blue';
+	const MAIN_BACKGROUND = 'main-background';
+	const ALTERNATE_BACKGROUND = 'alternate-background';
+	const HIGHLIGHT = 'highlight';
+	const RED_BLOCK = 'red';
+	const ORANGE_BLOCK = 'orange';
+	const YELLOW_BLOCK = 'yellow';
+	const GREEN_BLOCK = 'green';
+	const BLUE_BLOCK = 'blue';
+	const PLUM_BLOCK = 'plum';
+	const BROWN_BLOCK = 'brown';
+	
+	private static $colors = array();
+	private static $is_initialized = false;
+
+	private static function initialize() {
+		self::$colors = array(
+			self::STMARKS_BLUE => new Color('003359', 'ffffff', null, '5588af'),
+			self::MAIN_BACKGROUND => new Color('ffffff', '000000'),
+			self::ALTERNATE_BACKGROUND => new Color('cfcfc5', '000000'),
+			self::HIGHLIGHT => new Color('d6ecfc', '000000'),
+			self::RED_BLOCK => new Color('a30000', 'ffffff', null, 'ffe2e2'),
+			self::ORANGE_BLOCK => new Color('e47e00', 'ffffff', null, 'ffe4c3'),
+			self::YELLOW_BLOCK => new Color('fff700', '000000', '837f00', 'ffffe1'),
+			self::GREEN_BLOCK => new Color('00a417', 'ffffff', null, 'e1ffe5'),
+			self::BLUE_BLOCK => new Color('3068f8', 'ffffff', null, 'e1e9ff'),
+			self::PLUM_BLOCK => new Color('7a00fb', 'ffffff', null, 'f0e2ff'),
+			self::BROWN_BLOCK => new Color('623609', 'ffffff', null, 'dcd8d5')
+		);
+		self::$is_initialized = true;
+	}
+	
+	public static function get($color) {
+		if (!self::$is_initialized) self::initialize();
+		return self::$colors[$color];
+	}
+
+	public static function all() {
+		if (!self::$is_initialized) self::initialize();
+		return array_keys(self::$colors);
+	}
+}
+
+class Color {
+	public $base_color;
+	public $foreground_text;
+	public $dark_variant;
+	public $light_variant;
+	
+	private static function invert($color) {
+		$red = dechex(255 - hexdec(substr($color, 0, 2)));
+		$red = (strlen($red) > 1) ? $red : "0$red";
+		$green = dechex(255 - hexdec(substr($color, 2, 2)));
+		$green = (strlen($green) > 1) ? $green : "0$green";
+		$blue = dechex(255 - hexdec(substr($color, 4, 2)));
+		$blue = (strlen($blue) > 1) ? $blue : "0$blue";
+		return "$red$green$blue";
+	}
+	
+	private static function canonicalize($code) {
+		return substr(preg_replace('/[^0-9A-F]/', '', strtoupper($code)), 0, 6);
+	}
+	
+	public function __construct($base, $text = null, $dark = null, $light = null) {
+		$this->base_color = self::canonicalize($base);
+		$this->foreground_text = (empty($text) ? self::invert($this->base_color) : self::canonicalize($text));
+		$this->dark_variant = (empty($dark) ? $this->base_color : self::canonicalize($dark));
+		$this->light_variant = (empty($light) ? $this->base_color : self::canonicalize($light));
+	}
+	
+	public function __toString() {
+		return $this->hex();
+	}
+	
+	public function value() {
+		return $this->base_color;
+	}
+	
+	public function hex() {
+		return "#{$this->base_color}";
+	}
+	
+	public function foreground() {
+		return new Color($this->foreground_text);
+	}
+	
+	public function text() {
+		return $this->foreground();
+	}
+
+	public function light() {
+		return new Color($this->light_variant);
+	}
+	
+	public function dark() {
+		return new Color($this->dark_variant);
+	}
+	
+	public function inverted() {
+		return new Color(self::invert($this->base_color), self::invert($this->foreground_text), self::invert($this->dark_variant), self::invert($this->light_variant));
+	}
+}
+
+?>

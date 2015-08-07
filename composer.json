@@ -1,0 +1,16 @@
+{
+    "name": "smtech/stmarks-colors",
+    "description": "An object-ified, consistent set of hex colors for St. Mark’s projects",
+    "license": "LGPL-3.0",
+    "authors": [
+        {
+            "name": "Seth Battis",
+            "email": "sethbattis@stmarksschool.org"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "classmap": [""]
+    }
+}
