@@ -2,10 +2,11 @@
 
 /** StMarksColors and related classes */
 
-namespace smtech\stmarks_colors;
+namespace smtech;
 
 /**
- * A class to describe St. Mark's colors consistently
+ * A class to describe St. Mark's colors consistently (since I'm not going to
+ * bother with {less} or Sass or whatever... right now.
  *
  * @author Seth Battis <SethBattis@stmarksschool.org>
  **/
