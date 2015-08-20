@@ -29,7 +29,7 @@ class StMarksColors {
 
 	private static function initialize() {
 		self::$colors = array(
-			self::STMARKS_BLUE => new Color('003359', 'ffffff', null, '5588af'),
+			self::STMARKS_BLUE => new Color('29415f', 'ffffff', '003359', '5588af'),
 			self::MAIN_BACKGROUND => new Color('ffffff', '000000'),
 			self::ALTERNATE_BACKGROUND => new Color('cfcfc5', '000000'),
 			self::HIGHLIGHT => new Color('d6ecfc', '000000'),
